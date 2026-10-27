@@ -1,16 +1,46 @@
-# Pushing a tag like v0.2.0 builds the Mac and Windows apps and publishes them as a GitHub Release.
-# The tag must match "version" in package.json.
+# Merging a version bump into master releases it: when package.json's version has no
+# v<version> tag yet, the Mac and Windows apps are built and published as a GitHub Release,
+# which also creates the tag. Pushes that keep the version are skipped.
+# It can also be started by hand from the Actions tab, e.g. after a failed build.
 name: Release
 
 on:
   push:
-    tags: ['v*']
+    branches: [master]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+# Run releases one at a time so two quick merges can't publish the same version twice.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+      released: ${{ steps.version.outputs.released }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Is this version already released?
+        id: version
+        run: |
+          tag="v$(node -p "require('./package.json').version")"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" > /dev/null; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+            echo "$tag is already released; nothing to do."
+          else
+            echo "released=false" >> "$GITHUB_OUTPUT"
+            echo "Releasing $tag."
+          fi
+
   build:
+    needs: check
+    if: needs.check.outputs.released == 'false'
     strategy:
       matrix:
         include:
@@ -33,15 +63,6 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: Check that the tag matches package.json
-        shell: bash
-        run: |
-          version="v$(node -p "require('./package.json').version")"
-          if [ "$version" != "$GITHUB_REF_NAME" ]; then
-            echo "::error::package.json version is $version but the tag is $GITHUB_REF_NAME"
-            exit 1
-          fi
-
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm build
@@ -59,7 +80,7 @@ jobs:
           if-no-files-found: error
 
   publish:
-    needs: build
+    needs: [check, build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -75,11 +96,13 @@ jobs:
           sha256sum * > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
-      - name: Create the release
+      - name: Create the release and its tag
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.check.outputs.tag }}
         run: |
-          gh release create "$GITHUB_REF_NAME" dist/* \
+          gh release create "$TAG" dist/* \
             --repo "$GITHUB_REPOSITORY" \
-            --title "Corner Badminton ${GITHUB_REF_NAME#v}" \
+            --target "$GITHUB_SHA" \
+            --title "Corner Badminton ${TAG#v}" \
             --generate-notes
