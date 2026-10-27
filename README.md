@@ -56,7 +56,7 @@ CPU는 셔틀콕이 떨어질 곳을 계산해서 따라가지만, 가끔 낙하
 
 ### macOS
 
-Apple Silicon(M1 이상) Mac에서 실행됩니다. `corner-badminton-1.0.0-mac-arm64.dmg`를 받습니다.
+Apple Silicon(M1 이상) Mac에서 실행됩니다. `corner-badminton-1.0.1-mac-arm64.dmg`를 받습니다.
 
 1. `.dmg`를 열고 Corner Badminton을 응용 프로그램 폴더로 끌어다 놓습니다.
 2. 앱을 실행합니다. 아직 Apple 공증을 받지 않은 앱이라 처음에는 "확인되지 않은 개발자" 경고가 뜨고 열리지 않습니다.
@@ -73,7 +73,7 @@ xattr -dr com.apple.quarantine "/Applications/Corner Badminton.app"
 
 ### Windows
 
-Windows 10 이상에서 실행됩니다. `corner-badminton-1.0.0-windows-setup.exe`를 받습니다. 설치 파일 하나로 일반 PC(x64)와 ARM PC를 모두 지원하고, 알아서 맞는 버전을 설치합니다.
+Windows 10 이상에서 실행됩니다. `corner-badminton-1.0.1-windows-setup.exe`를 받습니다. 설치 파일 하나로 일반 PC(x64)와 ARM PC를 모두 지원하고, 알아서 맞는 버전을 설치합니다.
 
 1. 받은 설치 파일을 실행합니다.
 2. 아직 코드 서명을 하지 않은 앱이라 "Windows의 PC 보호" 창이 뜹니다. **추가 정보**를 누른 뒤 **실행**을 누릅니다.
@@ -82,7 +82,7 @@ Windows 10 이상에서 실행됩니다. `corner-badminton-1.0.0-windows-setup.e
 5. 다른 창 위에 띄워두기 싫으면 위쪽의 `PIN` 버튼을 눌러 끕니다.
 6. 지울 때는 **설정 → 앱 → 설치된 앱**에서 Corner Badminton을 제거합니다.
 
-설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 `corner-badminton-1.0.0-windows-x64.zip`, ARM PC는 `corner-badminton-1.0.0-windows-arm64.zip`입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
+설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 `corner-badminton-1.0.1-windows-x64.zip`, ARM PC는 `corner-badminton-1.0.1-windows-arm64.zip`입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
 
 ## 어떻게 만들었나
 
@@ -92,6 +92,12 @@ Electron, TypeScript, Vite로 만들었고 게임 엔진은 쓰지 않았습니�
 
 <details>
 <summary>버전 기록</summary>
+
+### 1.0.1
+
+- 라켓을 키웠습니다. 라켓이 더 크게 보이고, 공이 맞는 범위도 넓어져서 셔틀콕을 받아치기 쉬워졌습니다.
+- 라켓 가장자리에 맞아 엉뚱한 곳으로 가거나 네트에 걸리는 일이 줄었습니다.
+- CPU 라켓도 같이 커지는 만큼 CPU의 실수를 조금 늘려서, CPU가 더 강해지지 않게 맞췄습니다.
 
 ### 1.0.0
 

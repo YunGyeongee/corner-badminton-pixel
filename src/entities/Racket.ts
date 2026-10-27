@@ -1,9 +1,9 @@
 import type { Vec } from '../game/types';
 
 /** Sweet spot of the racket relative to the player's feet, for a player facing right. */
-export const RACKET_OFFSET: Vec = { x: 12, y: -19 };
+export const RACKET_OFFSET: Vec = { x: 13, y: -21 };
 /** How far from the sweet spot the shuttle can still be hit. */
-export const RACKET_REACH = 14;
+export const RACKET_REACH = 19;
 
 export const SWING_DURATION = 0.28;
 /** The swing can connect during the first part of the motion only. */
@@ -11,12 +11,12 @@ export const SWING_ACTIVE_TIME = 0.17;
 
 /** The paw holding the racket, relative to the feet, facing right. The racket pivots here. */
 export const HAND_OFFSET: Vec = { x: 9, y: -12 };
-export const HANDLE_LENGTH = 5;
+export const HANDLE_LENGTH = 6;
 /** Distance from the paw to the center of the racket head. */
-export const RACKET_LENGTH = 8.5;
+export const RACKET_LENGTH = 11;
 /** Racket head semi-axes: along the handle and across it. */
-export const RACKET_HEAD_LENGTH = 3.6;
-export const RACKET_HEAD_WIDTH = 3.1;
+export const RACKET_HEAD_LENGTH = 5;
+export const RACKET_HEAD_WIDTH = 4.2;
 
 const IDLE_ANGLE = -1.27;
 const SWING_START_ANGLE = -2.7;
