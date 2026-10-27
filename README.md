@@ -52,11 +52,11 @@ CPU는 셔틀콕이 떨어질 곳을 계산해서 따라가지만, 가끔 낙하
 
 ## 받기
 
-[Releases](https://github.com/YunGyeongee/corner-badminton-pixel/releases)에서 내 컴퓨터에 맞는 파일을 받습니다.
+[Releases](https://github.com/YunGyeongee/corner-badminton-pixel/releases)에서 내 컴퓨터에 맞는 파일을 받습니다. 함께 올라간 `SHA256SUMS.txt`로 받은 파일이 바뀌지 않았는지 확인할 수 있습니다.
 
 ### macOS
 
-Apple Silicon(M1 이상) Mac에서 실행됩니다. 최신 `.dmg`를 받습니다.
+Apple Silicon(M1 이상) Mac에서 실행됩니다. `corner-badminton-0.1.0-mac-arm64.dmg`를 받습니다.
 
 1. `.dmg`를 열고 Corner Badminton을 응용 프로그램 폴더로 끌어다 놓습니다.
 2. 앱을 실행합니다. 아직 Apple 공증을 받지 않은 앱이라 처음에는 "확인되지 않은 개발자" 경고가 뜨고 열리지 않습니다.
@@ -73,7 +73,7 @@ xattr -dr com.apple.quarantine "/Applications/Corner Badminton.app"
 
 ### Windows
 
-Windows 10 이상에서 실행됩니다. `Corner Badminton Setup 0.1.0.exe`를 받습니다. 설치 파일 하나로 일반 PC(x64)와 ARM PC를 모두 지원하고, 알아서 맞는 버전을 설치합니다.
+Windows 10 이상에서 실행됩니다. `corner-badminton-0.1.0-windows-setup.exe`를 받습니다. 설치 파일 하나로 일반 PC(x64)와 ARM PC를 모두 지원하고, 알아서 맞는 버전을 설치합니다.
 
 1. 받은 설치 파일을 실행합니다.
 2. 아직 코드 서명을 하지 않은 앱이라 "Windows의 PC 보호" 창이 뜹니다. **추가 정보**를 누른 뒤 **실행**을 누릅니다.
@@ -82,7 +82,7 @@ Windows 10 이상에서 실행됩니다. `Corner Badminton Setup 0.1.0.exe`를 �
 5. 다른 창 위에 띄워두기 싫으면 위쪽의 `PIN` 버튼을 눌러 끕니다.
 6. 지울 때는 **설정 → 앱 → 설치된 앱**에서 Corner Badminton을 제거합니다.
 
-설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 `Corner Badminton-0.1.0-win.zip`, ARM PC는 `Corner Badminton-0.1.0-arm64-win.zip`입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
+설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 `corner-badminton-0.1.0-windows-x64.zip`, ARM PC는 `corner-badminton-0.1.0-windows-arm64.zip`입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
 
 ## 직접 빌드하기
 
@@ -102,6 +102,22 @@ pnpm dev
 | `pnpm test` | 테스트를 돌립니다 |
 | `pnpm dist:mac` | `release/`에 Mac용 `.dmg`와 `.zip`을 만듭니다 |
 | `pnpm dist:win` | `release/`에 Windows용 설치 파일(`.exe`)과 `.zip`을 만듭니다. Mac에서도 만들 수 있습니다 |
+
+## 새 버전 내기
+
+GitHub Actions가 Mac과 Windows에서 각각 빌드해서 Releases에 올립니다.
+
+1. `package.json`의 `version`을 올립니다. 예: `0.2.0`
+2. README 맨 아래 버전 기록에 바뀐 점을 적습니다.
+3. 커밋하고 같은 버전의 태그를 push합니다.
+
+```bash
+git commit -am "Release 0.2.0"
+git tag v0.2.0
+git push origin master v0.2.0
+```
+
+태그와 `package.json`의 버전이 다르면 빌드가 멈춥니다. 진행 상황은 레포의 **Actions** 탭에서 볼 수 있습니다. 브랜치에 push할 때마다 타입 체크와 테스트도 자동으로 돌아갑니다.
 
 ## 어떻게 만들었나
 

@@ -42,7 +42,8 @@
       "target": [
         "dmg",
         "zip"
-      ]
+      ],
+      "artifactName": "corner-badminton-${version}-mac-${arch}.${ext}"
     },
     "electronFuses": {
       "runAsNode": false,
@@ -70,12 +71,13 @@
             "arm64"
           ]
         }
-      ]
+      ],
+      "artifactName": "corner-badminton-${version}-windows-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": true,
       "perMachine": false,
-      "artifactName": "${productName} Setup ${version}.${ext}"
+      "artifactName": "corner-badminton-${version}-windows-setup.${ext}"
     }
   },
   "pnpm": {
