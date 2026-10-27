@@ -84,48 +84,11 @@ Windows 10 이상에서 실행됩니다. `corner-badminton-1.0.0-windows-setup.e
 
 설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 `corner-badminton-1.0.0-windows-x64.zip`, ARM PC는 `corner-badminton-1.0.0-windows-arm64.zip`입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
 
-## 직접 빌드하기
-
-Node.js 22.12 이상과 pnpm이 필요합니다.
-
-```bash
-pnpm install
-pnpm dev
-```
-
-`Electron failed to install correctly` 같은 오류가 나면 `node node_modules/electron/install.js`를 한 번 실행하고 다시 시도하세요.
-
-| 명령 | 하는 일 |
-| --- | --- |
-| `pnpm dev` | 개발 모드로 실행합니다. `src/`를 고치면 바로 반영됩니다 |
-| `pnpm start` | 빌드한 뒤 실제 앱처럼 실행합니다 |
-| `pnpm test` | 테스트를 돌립니다 |
-| `pnpm dist:mac` | `release/`에 Mac용 `.dmg`와 `.zip`을 만듭니다 |
-| `pnpm dist:win` | `release/`에 Windows용 설치 파일(`.exe`)과 `.zip`을 만듭니다. Mac에서도 만들 수 있습니다 |
-
-## 새 버전 내기
-
-GitHub Actions가 Mac과 Windows에서 각각 빌드해서 Releases에 올립니다.
-
-1. `package.json`의 `version`을 올립니다. 예: `0.2.0`
-2. README 맨 아래 버전 기록에 바뀐 점을 적습니다.
-3. 커밋하고 같은 버전의 태그를 push합니다.
-
-```bash
-git commit -am "Release 0.2.0"
-git tag v0.2.0
-git push origin master v0.2.0
-```
-
-태그와 `package.json`의 버전이 다르면 빌드가 멈춥니다. 진행 상황은 레포의 **Actions** 탭에서 볼 수 있습니다. 브랜치에 push할 때마다 타입 체크와 테스트도 자동으로 돌아갑니다.
-
 ## 어떻게 만들었나
 
 Electron, TypeScript, Vite로 만들었고 게임 엔진은 쓰지 않았습니다. 화면은 240×140 크기의 캔버스에 그린 다음 픽셀을 번지지 않게 키웁니다. Retina처럼 정수배로 딱 맞으면 정수배로, Windows의 125% 배율처럼 정수배로는 빈 테두리가 크게 남으면 창에 맞춰 키웁니다. Mac과 Windows가 같은 코드를 씁니다. 캐릭터, 라켓, 셔틀콕, 글꼴까지 전부 코드 안의 작은 픽셀 배열로 그렸고 외부 그림 파일은 없습니다.
 
 게임 로직(`src/game`, `src/entities`)은 화면과 분리되어 있어서 테스트에서 CPU끼리 21점 경기를 끝까지 치르게 할 수 있습니다. 렌더러는 Node.js에 접근할 수 없고, 창 제어에 필요한 기능 네 가지(항상 위 표시 확인·변경, 최소화, 닫기)만 preload를 통해 받습니다. 네트워크 통신은 하지 않으며 카메라·마이크 같은 권한 요청은 모두 거절합니다. 배포용 앱은 Electron fuse로 Node 실행 모드와 디버거 옵션을 끄고, 앱 파일이 변조되면 실행되지 않게 했습니다.
-
-키 배치는 `src/game/InputManager.ts`, CPU 난이도는 `src/game/AIController.ts`, 셔틀콕이 나는 느낌은 `src/game/Physics.ts`, 점수 규칙은 `src/game/ScoreManager.ts`에서 바꿀 수 있습니다.
 
 <details>
 <summary>버전 기록</summary>
