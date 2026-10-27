@@ -1,0 +1,86 @@
+{
+  "name": "corner-badminton",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A tiny pixel-art badminton game that lives in the corner of your screen.",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "pnpm typecheck && vite build && tsc -p tsconfig.electron.json",
+    "start": "pnpm build && electron .",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.electron.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dist:mac": "pnpm build && electron-builder --mac",
+    "dist:win": "pnpm build && electron-builder --win"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@8.15.9",
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "electron": "44.9.3",
+    "electron-builder": "26.18.0",
+    "typescript": "6.0.3",
+    "vite": "8.3.5",
+    "vitest": "5.0.5"
+  },
+  "build": {
+    "appId": "com.cornerbadminton.app",
+    "productName": "Corner Badminton",
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.games",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "electronFuses": {
+      "runAsNode": false,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true,
+      "enableCookieEncryption": true,
+      "grantFileProtocolExtraPrivileges": false,
+      "resetAdHocDarwinSignature": true
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "artifactName": "${productName} Setup ${version}.${ext}"
+    }
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
+  }
+}
