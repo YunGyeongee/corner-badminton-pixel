@@ -27,9 +27,9 @@ export interface AIProfile {
 }
 
 export const AI_PROFILES: Record<Difficulty, AIProfile> = {
-  easy: { speed: 0.7, reaction: 0.34, misjudgeChance: 0.3, misjudgeError: 1.75, judgeOutChance: 0.3, smashChance: 0, timingError: 0.22, serveDelay: 1.2 },
-  normal: { speed: 0.85, reaction: 0.24, misjudgeChance: 0.34, misjudgeError: 1.6, judgeOutChance: 0.6, smashChance: 0.3, timingError: 0.22, serveDelay: 0.9 },
-  hard: { speed: 1, reaction: 0.12, misjudgeChance: 0.2, misjudgeError: 1.4, judgeOutChance: 0.9, smashChance: 0.6, timingError: 0.15, serveDelay: 0.7 },
+  easy: { speed: 0.6, reaction: 0.42, misjudgeChance: 0.42, misjudgeError: 1.9, judgeOutChance: 0.15, smashChance: 0, timingError: 0.28, serveDelay: 1.4 },
+  normal: { speed: 0.75, reaction: 0.32, misjudgeChance: 0.42, misjudgeError: 1.75, judgeOutChance: 0.45, smashChance: 0.2, timingError: 0.26, serveDelay: 1.1 },
+  hard: { speed: 0.92, reaction: 0.17, misjudgeChance: 0.26, misjudgeError: 1.5, judgeOutChance: 0.85, smashChance: 0.5, timingError: 0.18, serveDelay: 0.8 },
 };
 
 /** Height of the racket sweet spot when standing / at the top of a jump. */
