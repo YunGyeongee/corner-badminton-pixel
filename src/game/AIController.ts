@@ -16,7 +16,7 @@ export interface AIProfile {
   reaction: number;
   /** Chance of misreading where the shuttle will come down. */
   misjudgeChance: number;
-  /** Maximum positioning error when misjudging, in pixels. */
+  /** Maximum positioning error when misjudging, as a multiple of the racket reach. */
   misjudgeError: number;
   /** Chance of letting a shuttle that is going out drop. */
   judgeOutChance: number;
@@ -27,9 +27,9 @@ export interface AIProfile {
 }
 
 export const AI_PROFILES: Record<Difficulty, AIProfile> = {
-  easy: { speed: 0.7, reaction: 0.34, misjudgeChance: 0.3, misjudgeError: 24, judgeOutChance: 0.3, smashChance: 0, timingError: 0.22, serveDelay: 1.2 },
-  normal: { speed: 0.85, reaction: 0.24, misjudgeChance: 0.24, misjudgeError: 22, judgeOutChance: 0.6, smashChance: 0.3, timingError: 0.16, serveDelay: 0.9 },
-  hard: { speed: 1, reaction: 0.12, misjudgeChance: 0.08, misjudgeError: 16, judgeOutChance: 0.9, smashChance: 0.6, timingError: 0.1, serveDelay: 0.7 },
+  easy: { speed: 0.7, reaction: 0.34, misjudgeChance: 0.3, misjudgeError: 1.75, judgeOutChance: 0.3, smashChance: 0, timingError: 0.22, serveDelay: 1.2 },
+  normal: { speed: 0.85, reaction: 0.24, misjudgeChance: 0.34, misjudgeError: 1.6, judgeOutChance: 0.6, smashChance: 0.3, timingError: 0.22, serveDelay: 0.9 },
+  hard: { speed: 1, reaction: 0.12, misjudgeChance: 0.2, misjudgeError: 1.4, judgeOutChance: 0.9, smashChance: 0.6, timingError: 0.15, serveDelay: 0.7 },
 };
 
 /** Height of the racket sweet spot when standing / at the top of a jump. */
@@ -143,7 +143,7 @@ export class AIController {
     const point = intercept ?? { x: flight.x, index: flight.path.length - 1 };
 
     const misjudge = this.rng() < this.profile.misjudgeChance;
-    const maxError = misjudge ? this.profile.misjudgeError : 2;
+    const maxError = misjudge ? this.profile.misjudgeError * RACKET_REACH : 2;
     const error = (this.rng() * 2 - 1) * maxError;
     return {
       targetX: point.x - me.facing * RACKET_OFFSET.x + error,
