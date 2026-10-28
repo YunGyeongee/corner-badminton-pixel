@@ -84,6 +84,14 @@ Windows 10 이상에서 실행됩니다. `corner-badminton-1.0.2-windows-setup.e
 
 설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 `corner-badminton-1.0.2-windows-x64.zip`, ARM PC는 `corner-badminton-1.0.2-windows-arm64.zip`입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
 
+### 업데이트
+
+앱이 스스로 업데이트하지는 않습니다. 새 버전이 나오면 [Releases](https://github.com/YunGyeongee/corner-badminton-pixel/releases)에서 다시 받아 위와 같이 설치하면 됩니다. 저장하는 데이터가 없어서 덮어써도 잃는 것은 없습니다.
+
+- **macOS**: 새 `.dmg`를 열고 응용 프로그램 폴더로 끌어다 놓은 뒤, 같은 이름의 앱이 있다고 나오면 **대치**를 누릅니다. 새로 받은 앱이라 처음 실행할 때 "그래도 열기"나 `xattr` 명령을 다시 해야 할 수 있습니다.
+- **Windows 설치 파일**: 게임을 끈 다음 새 설치 파일을 실행하면 기존 버전 위에 덮어써집니다. 먼저 지울 필요는 없습니다.
+- **Windows `.zip`**: 새로 받은 압축을 풀어 실행하고, 예전 버전 폴더는 지웁니다.
+
 ## 어떻게 만들었나
 
 Electron, TypeScript, Vite로 만들었고 게임 엔진은 쓰지 않았습니다. 화면은 240×140 크기의 캔버스에 그린 다음 픽셀을 번지지 않게 키웁니다. Retina처럼 정수배로 딱 맞으면 정수배로, Windows의 125% 배율처럼 정수배로는 빈 테두리가 크게 남으면 창에 맞춰 키웁니다. Mac과 Windows가 같은 코드를 씁니다. 캐릭터, 라켓, 셔틀콕, 글꼴까지 전부 코드 안의 작은 픽셀 배열로 그렸고 외부 그림 파일은 없습니다.
