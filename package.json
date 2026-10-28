@@ -1,6 +1,6 @@
 {
   "name": "corner-badminton",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "description": "A tiny pixel-art badminton game that lives in the corner of your screen.",
   "main": "dist-electron/main.js",
