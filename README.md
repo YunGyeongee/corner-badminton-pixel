@@ -7,18 +7,18 @@
 
 ## 받기
 
-아래 링크를 누르면 바로 내려받아집니다. 받은 파일이 바뀌지 않았는지는 [SHA256SUMS.txt](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/SHA256SUMS.txt)로 확인할 수 있고, 지난 버전은 [Releases](https://github.com/YunGyeongee/corner-badminton-pixel/releases)에 있습니다.
+아래 링크를 누르면 바로 내려받아집니다. 받은 파일이 바뀌지 않았는지는 [SHA256SUMS.txt](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/SHA256SUMS.txt)로 확인할 수 있고, 지난 버전은 [Releases](https://github.com/YunGyeongee/corner-badminton-pixel/releases)에 있습니다.
 
 | 컴퓨터 | 내려받기 |
 | --- | --- |
-| Mac (Apple Silicon) | [corner-badminton-1.0.3-mac-arm64.dmg](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/corner-badminton-1.0.3-mac-arm64.dmg) |
-| Windows 설치 파일 (x64, ARM 공통) | [corner-badminton-1.0.3-windows-setup.exe](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/corner-badminton-1.0.3-windows-setup.exe) |
-| Windows 압축 파일 (일반 PC) | [corner-badminton-1.0.3-windows-x64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/corner-badminton-1.0.3-windows-x64.zip) |
-| Windows 압축 파일 (ARM PC) | [corner-badminton-1.0.3-windows-arm64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/corner-badminton-1.0.3-windows-arm64.zip) |
+| Mac (Apple Silicon) | [corner-badminton-1.0.4-mac-arm64.dmg](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-mac-arm64.dmg) |
+| Windows 설치 파일 (x64, ARM 공통) | [corner-badminton-1.0.4-windows-setup.exe](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-setup.exe) |
+| Windows 압축 파일 (일반 PC) | [corner-badminton-1.0.4-windows-x64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-x64.zip) |
+| Windows 압축 파일 (ARM PC) | [corner-badminton-1.0.4-windows-arm64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-arm64.zip) |
 
 ### macOS
 
-Apple Silicon(M1 이상) Mac에서 실행됩니다. [corner-badminton-1.0.3-mac-arm64.dmg](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/corner-badminton-1.0.3-mac-arm64.dmg)를 받습니다.
+Apple Silicon(M1 이상) Mac에서 실행됩니다. [corner-badminton-1.0.4-mac-arm64.dmg](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-mac-arm64.dmg)를 받습니다.
 
 1. `.dmg`를 열고 Corner Badminton을 응용 프로그램 폴더로 끌어다 놓습니다.
 2. 앱을 실행합니다. 아직 Apple 공증을 받지 않은 앱이라 처음에는 "확인되지 않은 개발자" 경고가 뜨고 열리지 않습니다.
@@ -36,7 +36,7 @@ xattr -dr com.apple.quarantine "/Applications/Corner Badminton.app"
 
 ### Windows
 
-Windows 10 이상에서 실행됩니다. [corner-badminton-1.0.3-windows-setup.exe](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/corner-badminton-1.0.3-windows-setup.exe)를 받습니다. 설치 파일 하나로 일반 PC(x64)와 ARM PC를 모두 지원하고, 알아서 맞는 버전을 설치합니다.
+Windows 10 이상에서 실행됩니다. [corner-badminton-1.0.4-windows-setup.exe](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-setup.exe)를 받습니다. 설치 파일 하나로 일반 PC(x64)와 ARM PC를 모두 지원하고, 알아서 맞는 버전을 설치합니다.
 
 1. 받은 설치 파일을 실행합니다.
 2. 아직 코드 서명을 하지 않은 앱이라 "Windows의 PC 보호" 창이 뜹니다. **추가 정보**를 누른 뒤 **실행**을 누릅니다.
@@ -46,7 +46,7 @@ Windows 10 이상에서 실행됩니다. [corner-badminton-1.0.3-windows-setup.e
 6. 일하는 중이라 티 나지 않게 하려면 O 키나 위쪽의 `100%` 버튼으로 창을 흐리게 합니다. 누를 때마다 100% → 60% → 30%로 바뀝니다. B 키나 `BG` 버튼으로 배경을 끄면 코트, 네트, 캥거루만 바탕화면 위에 남습니다. 둘 다 다음에 켤 때도 그대로입니다.
 7. 지울 때는 **설정 → 앱 → 설치된 앱**에서 Corner Badminton을 제거합니다.
 
-설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 [corner-badminton-1.0.3-windows-x64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/corner-badminton-1.0.3-windows-x64.zip), ARM PC는 [corner-badminton-1.0.3-windows-arm64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/corner-badminton-1.0.3-windows-arm64.zip)입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
+설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 [corner-badminton-1.0.4-windows-x64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-x64.zip), ARM PC는 [corner-badminton-1.0.4-windows-arm64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-arm64.zip)입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
 
 ### 업데이트
 
@@ -105,6 +105,12 @@ CPU는 셔틀콕이 떨어질 곳을 계산해서 따라가지만, 가끔 낙하
 
 <details>
 <summary>버전 기록</summary>
+
+### 1.0.4
+
+- 투명 모드를 넣었습니다. O 키나 위쪽의 `100%` 버튼으로 창을 100% → 60% → 30%로 흐리게 합니다.
+- 배경을 끌 수 있습니다. B 키나 `BG` 버튼을 누르면 벽과 조명이 사라지고 코트, 네트, 캥거루만 바탕화면 위에 남습니다.
+- 두 설정 모두 다음에 켤 때도 그대로입니다. Esc 메뉴에서도 바꿀 수 있습니다.
 
 ### 1.0.3
 
