@@ -6,6 +6,7 @@ import { DEFAULT_BINDINGS, InputManager } from './game/InputManager';
 import { Renderer } from './rendering/Renderer';
 import { drawHUD } from './ui/GameHUD';
 import { Menu, type MenuAction } from './ui/Menu';
+import { loadOpacity, loadShowBackground, nextOpacity, opacityLabel, saveOpacity, saveShowBackground } from './ui/Transparency';
 
 const api = window.cornerApi;
 
@@ -17,6 +18,8 @@ function element<T extends HTMLElement>(selector: string): T {
 
 const canvas = element<HTMLCanvasElement>('#game');
 const stage = element<HTMLElement>('#stage');
+const backgroundButton = element<HTMLButtonElement>('#btn-bg');
+const fadeButton = element<HTMLButtonElement>('#btn-fade');
 const pinButton = element<HTMLButtonElement>('#btn-pin');
 const pauseButton = element<HTMLButtonElement>('#btn-pause');
 const minimizeButton = element<HTMLButtonElement>('#btn-min');
@@ -26,6 +29,8 @@ const game = new Game();
 const ai = new AIController('right', 'normal');
 const renderer = new Renderer(canvas);
 let pinned = true;
+let opacity = loadOpacity();
+let showBackground = loadShowBackground();
 let clock = 0;
 let frameDt = 0;
 
@@ -33,7 +38,13 @@ const menu = new Menu([
   { action: 'resume', label: () => 'RESUME' },
   { action: 'restart', label: () => 'RESTART' },
   { action: 'level', label: () => `LEVEL: ${ai.difficulty.toUpperCase()}` },
-  ...(api ? [{ action: 'pin' as const, label: () => `ON TOP: ${pinned ? 'ON' : 'OFF'}` }] : []),
+  { action: 'background', label: () => `BACKGROUND: ${showBackground ? 'ON' : 'OFF'}` },
+  ...(api
+    ? [
+        { action: 'opacity' as const, label: () => `SEE-THROUGH: ${opacityLabel(opacity)}` },
+        { action: 'pin' as const, label: () => `ON TOP: ${pinned ? 'ON' : 'OFF'}` },
+      ]
+    : []),
   { action: 'quit', label: () => 'QUIT' },
 ]);
 
@@ -45,6 +56,9 @@ function update(dt: number): void {
   frameDt = menu.open ? 0 : dt;
   clock += dt;
 
+  // See-through and the background switch work with or without the menu open.
+  if (input.consumePressed('opacity')) cycleOpacity();
+  if (input.consumePressed('background')) setShowBackground(!showBackground);
   if (input.consumePressed('pause')) {
     if (menu.open) resume();
     else pause();
@@ -106,6 +120,12 @@ function activate(action: MenuAction): void {
       ai.difficulty = DIFFICULTIES[(DIFFICULTIES.indexOf(ai.difficulty) + 1) % DIFFICULTIES.length];
       render();
       break;
+    case 'opacity':
+      cycleOpacity();
+      break;
+    case 'background':
+      setShowBackground(!showBackground);
+      break;
     case 'pin':
       void togglePin();
       break;
@@ -119,6 +139,30 @@ async function togglePin(): Promise<void> {
   if (!api) return;
   pinned = await api.setAlwaysOnTop(!pinned);
   pinButton.classList.toggle('active', pinned);
+  render();
+}
+
+/** Off leaves only the court, the net and the players over the desktop. */
+function setShowBackground(show: boolean): void {
+  showBackground = show;
+  saveShowBackground(show);
+  renderer.showBackground = show;
+  document.body.classList.toggle('clear', !show);
+  backgroundButton.classList.toggle('active', show);
+  render();
+}
+
+function cycleOpacity(): void {
+  void applyOpacity(nextOpacity(opacity));
+}
+
+async function applyOpacity(value: number): Promise<void> {
+  if (!api) return;
+  opacity = value;
+  saveOpacity(value);
+  await api.setOpacity(value);
+  fadeButton.textContent = opacityLabel(value);
+  fadeButton.classList.toggle('active', value < 1);
   render();
 }
 
@@ -151,14 +195,17 @@ canvas.addEventListener('pointermove', (event) => {
 });
 
 // Title bar buttons. Prevent focus so Space doesn't "click" them again.
-for (const button of [pinButton, pauseButton, minimizeButton, closeButton]) {
+for (const button of [backgroundButton, fadeButton, pinButton, pauseButton, minimizeButton, closeButton]) {
   button.addEventListener('mousedown', (event) => event.preventDefault());
 }
+backgroundButton.addEventListener('click', () => setShowBackground(!showBackground));
+fadeButton.addEventListener('click', cycleOpacity);
 pinButton.addEventListener('click', () => void togglePin());
 pauseButton.addEventListener('click', () => (menu.open ? resume() : pause()));
 minimizeButton.addEventListener('click', () => api?.minimize());
 closeButton.addEventListener('click', quit);
 if (!api) {
+  fadeButton.hidden = true;
   pinButton.hidden = true;
   minimizeButton.hidden = true;
 }
@@ -179,7 +226,9 @@ new ResizeObserver(() => {
 }).observe(stage);
 
 input.attach();
+setShowBackground(showBackground);
 if (api) {
+  void applyOpacity(opacity);
   void api.isAlwaysOnTop().then((value) => {
     pinned = value;
     pinButton.classList.toggle('active', pinned);

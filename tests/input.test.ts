@@ -68,7 +68,7 @@ describe('InputManager', () => {
     const target = new EventTarget();
     const input = new InputManager(target, {
       left: ['KeyJ'], right: ['KeyL'], jump: ['KeyI'], swing: ['KeyK'],
-      pause: ['KeyP'], up: ['KeyI'], down: ['KeyM'], confirm: ['Enter'],
+      pause: ['KeyP'], opacity: ['KeyO'], background: ['KeyB'], up: ['KeyI'], down: ['KeyM'], confirm: ['Enter'],
     });
     input.attach();
     target.dispatchEvent(key('keydown', 'KeyJ'));

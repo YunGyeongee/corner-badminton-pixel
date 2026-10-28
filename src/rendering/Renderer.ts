@@ -43,7 +43,10 @@ export class Renderer {
   private readonly ctx: CanvasRenderingContext2D;
   private readonly buffer: HTMLCanvasElement;
   private readonly bufferCtx: CanvasRenderingContext2D;
-  private readonly background: HTMLCanvasElement;
+  private readonly backdrop: HTMLCanvasElement;
+  private readonly structures: HTMLCanvasElement;
+  /** Off: only the court, the net and the players are drawn, and the rest of the window stays see-through. */
+  showBackground = true;
   private scale = 1;
   private offsetX = 0;
   private offsetY = 0;
@@ -53,8 +56,10 @@ export class Renderer {
     this.ctx = get2d(canvas);
     this.buffer = createCanvas(WORLD_WIDTH, WORLD_HEIGHT);
     this.bufferCtx = get2d(this.buffer);
-    this.background = createCanvas(WORLD_WIDTH, WORLD_HEIGHT);
-    drawBackground(get2d(this.background));
+    this.backdrop = createCanvas(WORLD_WIDTH, WORLD_HEIGHT);
+    drawBackdrop(get2d(this.backdrop));
+    this.structures = createCanvas(WORLD_WIDTH, WORLD_HEIGHT);
+    drawCourt(get2d(this.structures));
     this.resize();
   }
 
@@ -93,9 +98,11 @@ export class Renderer {
 
     const ctx = this.bufferCtx;
     const shake = this.effects.shakeOffset;
+    ctx.clearRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     ctx.save();
     ctx.translate(shake.x, shake.y);
-    ctx.drawImage(this.background, 0, 0);
+    if (this.showBackground) ctx.drawImage(this.backdrop, 0, 0);
+    ctx.drawImage(this.structures, 0, 0);
     drawShadows(ctx, game);
     drawPlayer(ctx, game.players.left);
     drawPlayer(ctx, game.players.right);
@@ -106,8 +113,11 @@ export class Renderer {
 
     const out = this.ctx;
     out.imageSmoothingEnabled = false;
-    out.fillStyle = PALETTE.navy;
-    out.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    out.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this.showBackground) {
+      out.fillStyle = PALETTE.navy;
+      out.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
     out.drawImage(this.buffer, this.offsetX, this.offsetY, WORLD_WIDTH * this.scale, WORLD_HEIGHT * this.scale);
   }
 }
@@ -126,8 +136,8 @@ function get2d(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
   return ctx;
 }
 
-/** Static scenery, drawn once into its own canvas. */
-function drawBackground(ctx: CanvasRenderingContext2D): void {
+/** The gym behind the court: wall, ceiling lights and wall board. Left out when the background is off. */
+function drawBackdrop(ctx: CanvasRenderingContext2D): void {
   // Gym wall with ceiling lights.
   ctx.fillStyle = PALETTE.navy;
   ctx.fillRect(0, 0, WORLD_WIDTH, GROUND_Y);
@@ -144,7 +154,10 @@ function drawBackground(ctx: CanvasRenderingContext2D): void {
   ctx.fillRect(0, WALL_BOARD_TOP, WORLD_WIDTH, 1);
   ctx.fillStyle = PALETTE.navy;
   for (let x = 12; x < WORLD_WIDTH; x += 24) ctx.fillRect(x, WALL_BOARD_TOP + 1, 1, GROUND_Y - WALL_BOARD_TOP - 1);
+}
 
+/** The court itself: floor, court lines and the net. Always drawn. */
+function drawCourt(ctx: CanvasRenderingContext2D): void {
   // Floor: court surface with lines, then the wooden edge below it.
   ctx.fillStyle = PALETTE.brown;
   ctx.fillRect(0, GROUND_Y, WORLD_WIDTH, WORLD_HEIGHT - GROUND_Y);

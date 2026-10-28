@@ -25,7 +25,8 @@ Apple Silicon(M1 이상) Mac에서 실행됩니다. [corner-badminton-1.0.3-mac-
 3. **시스템 설정 → 개인정보 보호 및 보안**으로 가서 아래쪽의 **그래도 열기**를 누릅니다. 한 번만 하면 됩니다.
 4. 화면 오른쪽 아래에 게임 창이 뜹니다. 바로 Space를 눌러 서브하면 됩니다.
 5. 다른 창 위에 띄워두기 싫으면 위쪽의 `PIN` 버튼을 눌러 끕니다.
-6. 끌 때는 위쪽의 `X` 버튼을 누르거나 Esc 메뉴에서 `QUIT`을 고릅니다.
+6. 일하는 중이라 티 나지 않게 하려면 O 키나 위쪽의 `100%` 버튼으로 창을 흐리게 합니다. 누를 때마다 100% → 60% → 30%로 바뀝니다. B 키나 `BG` 버튼으로 배경을 끄면 코트, 네트, 캥거루만 바탕화면 위에 남습니다. 둘 다 다음에 켤 때도 그대로입니다.
+7. 끌 때는 위쪽의 `X` 버튼을 누르거나 Esc 메뉴에서 `QUIT`을 고릅니다.
 
 3번이 안 되면 터미널에서 아래 명령을 한 번 실행해도 됩니다.
 
@@ -42,7 +43,8 @@ Windows 10 이상에서 실행됩니다. [corner-badminton-1.0.3-windows-setup.e
 3. 관리자 권한 없이 내 계정에만 설치되고, 끝나면 바로 게임이 실행됩니다. 바탕화면과 시작 메뉴에 바로가기가 생깁니다.
 4. 화면 오른쪽 아래에 게임 창이 뜹니다. 바로 Space를 눌러 서브하면 됩니다.
 5. 다른 창 위에 띄워두기 싫으면 위쪽의 `PIN` 버튼을 눌러 끕니다.
-6. 지울 때는 **설정 → 앱 → 설치된 앱**에서 Corner Badminton을 제거합니다.
+6. 일하는 중이라 티 나지 않게 하려면 O 키나 위쪽의 `100%` 버튼으로 창을 흐리게 합니다. 누를 때마다 100% → 60% → 30%로 바뀝니다. B 키나 `BG` 버튼으로 배경을 끄면 코트, 네트, 캥거루만 바탕화면 위에 남습니다. 둘 다 다음에 켤 때도 그대로입니다.
+7. 지울 때는 **설정 → 앱 → 설치된 앱**에서 Corner Badminton을 제거합니다.
 
 설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 [corner-badminton-1.0.3-windows-x64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/corner-badminton-1.0.3-windows-x64.zip), ARM PC는 [corner-badminton-1.0.3-windows-arm64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.3/corner-badminton-1.0.3-windows-arm64.zip)입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
 
@@ -62,6 +64,8 @@ Windows 10 이상에서 실행됩니다. [corner-badminton-1.0.3-windows-setup.e
 | W | 점프합니다 |
 | Space | 라켓을 휘두릅니다. 서브도 Space입니다 |
 | Esc | 잠깐 멈추고 메뉴를 엽니다 |
+| O | 창을 흐리게 합니다. 누를 때마다 100% → 60% → 30% |
+| B | 배경(벽과 조명)을 끄고 코트, 네트, 캥거루만 남깁니다 |
 
 방향키(← → ↑)로도 움직일 수 있습니다. 창은 맨 위 검은 막대를 잡고 끌어서 옮깁니다.
 

@@ -1,6 +1,6 @@
 import type { Intent } from './types';
 
-export type Action = 'left' | 'right' | 'jump' | 'swing' | 'pause' | 'up' | 'down' | 'confirm';
+export type Action = 'left' | 'right' | 'jump' | 'swing' | 'pause' | 'opacity' | 'background' | 'up' | 'down' | 'confirm';
 
 /** Action -> KeyboardEvent.code values. Change these to remap the controls. */
 export type KeyBindings = Record<Action, readonly string[]>;
@@ -11,6 +11,8 @@ export const DEFAULT_BINDINGS: KeyBindings = {
   jump: ['KeyW', 'ArrowUp'],
   swing: ['Space'],
   pause: ['Escape'],
+  opacity: ['KeyO'],
+  background: ['KeyB'],
   up: ['KeyW', 'ArrowUp'],
   down: ['KeyS', 'ArrowDown'],
   confirm: ['Enter', 'Space'],

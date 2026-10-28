@@ -2,7 +2,7 @@ import { WORLD_HEIGHT, WORLD_WIDTH } from '../entities/Court';
 import type { Vec } from '../game/types';
 import { drawCenteredText, drawText, PALETTE } from '../rendering/PixelAssets';
 
-export type MenuAction = 'resume' | 'restart' | 'level' | 'pin' | 'quit';
+export type MenuAction = 'resume' | 'restart' | 'level' | 'background' | 'opacity' | 'pin' | 'quit';
 
 export interface MenuItem {
   action: MenuAction;
@@ -12,7 +12,8 @@ export interface MenuItem {
 
 const PANEL_WIDTH = 110;
 const PANEL_LEFT = (WORLD_WIDTH - PANEL_WIDTH) / 2;
-const PANEL_TOP = 20;
+// Leaves room above the control hints at y=106 for up to 8 items.
+const PANEL_TOP = 8;
 const ITEMS_TOP = PANEL_TOP + 16;
 const ITEM_HEIGHT = 10;
 const CENTER = WORLD_WIDTH / 2;
