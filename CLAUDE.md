@@ -1,6 +1,6 @@
 # Corner Badminton
 
-화면 구석에 띄워두는 픽셀 캥거루 배드민턴 게임입니다 (Electron + Vite + TypeScript). 그래픽은 `src/rendering/PixelAssets.ts`에서 코드로 그립니다.
+화면 구석에 띄워두는 픽셀 배드민턴 게임입니다. 캐릭터는 12간지 동물 중에 고르고, CPU는 캥거루입니다 (Electron + Vite + TypeScript). 그래픽은 `src/rendering/PixelAssets.ts`에서 코드로 그립니다.
 
 - 테스트: `pnpm test` / 타입 검사: `pnpm typecheck` / 실행: `pnpm dev`
 
@@ -26,6 +26,7 @@
 | README `## 조작` (키 추가·변경) | `games/corner-badminton/index.html`의 `#tab-controls` 표 |
 | README `### macOS` / `### Windows` / `### 업데이트` | `games/corner-badminton/index.html`의 `#tab-install` |
 | `docs/screenshot.png` | `../bubuddy-dev.github.io/assets/games/corner-badminton-screenshot.png`로 복사, `.shot` 이미지 alt를 README alt와 같게 |
+| `docs/characters.png` | `../bubuddy-dev.github.io/assets/games/corner-badminton-characters.png`로 복사, 두 번째 `.shot` 이미지 alt를 README alt와 같게 |
 | `build/icon.png` (1024px) | `sips -z 256 256 build/icon.png --out ../bubuddy-dev.github.io/assets/games/corner-badminton-icon.png` |
 | README 맨 위 소개나 게임 규칙의 큰 줄기가 | `games/corner-badminton/index.html`의 `<meta name="description">`, `.game-head` 부제, 첫 소개 문단, `index.html` 갤러리 타일의 `title` |
 

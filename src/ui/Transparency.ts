@@ -1,3 +1,5 @@
+import { readSetting, writeSetting } from './Settings';
+
 /**
  * Ways to make the game less obvious on screen, remembered between launches:
  * see-through (the whole window fades) and a clear background (only the court and players are drawn).
@@ -18,36 +20,19 @@ export function opacityLabel(opacity: number): string {
 }
 
 export function loadOpacity(): number {
-  const saved = Number(read(OPACITY_KEY));
+  const saved = Number(readSetting(OPACITY_KEY));
   return OPACITY_LEVELS.find((level) => level === saved) ?? 1;
 }
 
 export function saveOpacity(opacity: number): void {
-  write(OPACITY_KEY, String(opacity));
+  writeSetting(OPACITY_KEY, String(opacity));
 }
 
 /** Whether to draw the backdrop behind the court; on unless turned off before. */
 export function loadShowBackground(): boolean {
-  return read(BACKGROUND_KEY) !== 'false';
+  return readSetting(BACKGROUND_KEY) !== 'false';
 }
 
 export function saveShowBackground(show: boolean): void {
-  write(BACKGROUND_KEY, String(show));
-}
-
-function read(key: string): string | null {
-  try {
-    return globalThis.localStorage?.getItem(key) ?? null;
-  } catch {
-    // Storage can be unavailable; fall back to the defaults.
-    return null;
-  }
-}
-
-function write(key: string, value: string): void {
-  try {
-    globalThis.localStorage?.setItem(key, value);
-  } catch {
-    // Not remembering the setting is fine.
-  }
+  writeSetting(BACKGROUND_KEY, String(show));
 }

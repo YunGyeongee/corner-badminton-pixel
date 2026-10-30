@@ -4,7 +4,10 @@ import { Game } from './game/Game';
 import { GameLoop } from './game/GameLoop';
 import { DEFAULT_BINDINGS, InputManager } from './game/InputManager';
 import { Renderer } from './rendering/Renderer';
+import { CPU_CHARACTER, type CharacterId } from './rendering/PixelAssets';
 import { drawHUD } from './ui/GameHUD';
+import { loadCharacter, saveCharacter, stepCharacter } from './ui/CharacterChoice';
+import { CharacterSelect } from './ui/CharacterSelect';
 import { Menu, type MenuAction } from './ui/Menu';
 import { loadOpacity, loadShowBackground, nextOpacity, opacityLabel, saveOpacity, saveShowBackground } from './ui/Transparency';
 
@@ -31,12 +34,15 @@ const renderer = new Renderer(canvas);
 let pinned = true;
 let opacity = loadOpacity();
 let showBackground = loadShowBackground();
+let character = loadCharacter();
+renderer.characters = { left: character, right: CPU_CHARACTER };
 let clock = 0;
 let frameDt = 0;
 
 const menu = new Menu([
   { action: 'resume', label: () => 'RESUME' },
   { action: 'restart', label: () => 'RESTART' },
+  { action: 'character', label: () => `CHARACTER: ${character.toUpperCase()}` },
   { action: 'level', label: () => `LEVEL: ${ai.difficulty.toUpperCase()}` },
   { action: 'background', label: () => `BACKGROUND: ${showBackground ? 'ON' : 'OFF'}` },
   ...(api
@@ -48,24 +54,34 @@ const menu = new Menu([
   { action: 'quit', label: () => 'QUIT' },
 ]);
 
+// The game opens on the character picker.
+const select = new CharacterSelect();
+select.show(character);
+
 const loop = new GameLoop({ update, render, maxFps: 60 });
 // Any key wakes the loop, which sleeps while the pause menu is open.
 const input = new InputManager(window, DEFAULT_BINDINGS, () => loop.start());
 
 function update(dt: number): void {
-  frameDt = menu.open ? 0 : dt;
+  frameDt = menu.open || select.open ? 0 : dt;
   clock += dt;
 
   // See-through and the background switch work with or without the menu open.
   if (input.consumePressed('opacity')) cycleOpacity();
   if (input.consumePressed('background')) setShowBackground(!showBackground);
-  if (input.consumePressed('pause')) {
+  if (select.open) {
+    updateSelect();
+  } else if (input.consumePressed('pause')) {
     if (menu.open) resume();
     else pause();
   } else if (menu.open) {
     if (input.consumePressed('up')) menu.move(-1);
     if (input.consumePressed('down')) menu.move(1);
     if (input.consumePressed('confirm')) activate(menu.current);
+    if (menu.current === 'character') {
+      if (input.consumePressed('left')) changeCharacter(-1);
+      if (input.consumePressed('right')) changeCharacter(1);
+    }
   } else if (game.phase === 'gameover' && input.consumePressed('confirm')) {
     restart();
   } else {
@@ -75,18 +91,40 @@ function update(dt: number): void {
   input.endFrame();
 
   // Nothing moves while paused, so stop rendering until there is input.
-  if (menu.open) loop.stop();
+  if (menu.open || select.open) loop.stop();
+}
+
+function updateSelect(): void {
+  // Esc goes back to the pause menu; at launch there is nothing to go back to.
+  if (input.consumePressed('pause') && menu.open) select.hide();
+  if (input.consumePressed('left')) select.move(-1);
+  if (input.consumePressed('right')) select.move(1);
+  if (input.consumePressed('up')) select.moveRow(-1);
+  if (input.consumePressed('down')) select.moveRow(1);
+  if (input.consumePressed('confirm')) chooseCharacter(select.current);
+}
+
+/** Picked from the character screen: back to the pause menu, or into the game at launch. */
+function chooseCharacter(id: CharacterId): void {
+  setCharacter(id);
+  select.hide();
+  input.clear();
+  render();
 }
 
 function render(): void {
   renderer.render(game, frameDt, (ctx) => {
+    if (select.open) {
+      select.draw(ctx);
+      return;
+    }
     drawHUD(ctx, game, clock);
     if (menu.open) menu.draw(ctx);
   });
 }
 
 function pause(): void {
-  if (menu.open) return;
+  if (menu.open || select.open) return;
   game.paused = true;
   menu.show();
   input.clear();
@@ -116,6 +154,10 @@ function activate(action: MenuAction): void {
     case 'restart':
       restart();
       break;
+    case 'character':
+      select.show(character);
+      render();
+      break;
     case 'level':
       ai.difficulty = DIFFICULTIES[(DIFFICULTIES.indexOf(ai.difficulty) + 1) % DIFFICULTIES.length];
       render();
@@ -140,6 +182,17 @@ async function togglePin(): Promise<void> {
   pinned = await api.setAlwaysOnTop(!pinned);
   pinButton.classList.toggle('active', pinned);
   render();
+}
+
+function changeCharacter(delta: number): void {
+  setCharacter(stepCharacter(character, delta));
+  render();
+}
+
+function setCharacter(id: CharacterId): void {
+  character = id;
+  saveCharacter(id);
+  renderer.characters.left = id;
 }
 
 /** Off leaves only the court, the net and the players over the desktop. */
@@ -172,10 +225,15 @@ function quit(): void {
   else window.close();
 }
 
-// Mouse: menu items and "click to play again".
+// Mouse: the character screen, menu items and "click to play again".
 canvas.addEventListener('click', (event) => {
   const point = renderer.toWorld(event.clientX, event.clientY);
-  if (menu.open) {
+  if (select.open) {
+    const index = select.hitTest(point);
+    if (index < 0) return;
+    select.selected = index;
+    chooseCharacter(select.current);
+  } else if (menu.open) {
     const index = menu.hitTest(point);
     if (index < 0) return;
     menu.selected = index;
@@ -186,8 +244,17 @@ canvas.addEventListener('click', (event) => {
 });
 
 canvas.addEventListener('pointermove', (event) => {
+  const point = renderer.toWorld(event.clientX, event.clientY);
+  if (select.open) {
+    const index = select.hitTest(point);
+    if (index >= 0 && index !== select.selected) {
+      select.selected = index;
+      render();
+    }
+    return;
+  }
   if (!menu.open) return;
-  const index = menu.hitTest(renderer.toWorld(event.clientX, event.clientY));
+  const index = menu.hitTest(point);
   if (index >= 0 && index !== menu.selected) {
     menu.selected = index;
     render();
@@ -201,7 +268,11 @@ for (const button of [backgroundButton, fadeButton, pinButton, pauseButton, mini
 backgroundButton.addEventListener('click', () => setShowBackground(!showBackground));
 fadeButton.addEventListener('click', cycleOpacity);
 pinButton.addEventListener('click', () => void togglePin());
-pauseButton.addEventListener('click', () => (menu.open ? resume() : pause()));
+pauseButton.addEventListener('click', () => {
+  if (select.open) return;
+  if (menu.open) resume();
+  else pause();
+});
 minimizeButton.addEventListener('click', () => api?.minimize());
 closeButton.addEventListener('click', quit);
 if (!api) {

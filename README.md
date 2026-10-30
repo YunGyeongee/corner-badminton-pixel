@@ -3,29 +3,31 @@
 화면 구석에 작은 체육관을 하나 띄워둡니다.
 코드를 짜다가, 문서를 쓰다가 잠깐 손이 비면 셔틀콕을 한 번 넘기면 됩니다. 창은 다른 창 위에 떠 있지만 480×300 크기라서 하던 일을 가리지 않습니다.
 
-![빨간 머리띠를 한 캥거루가 서브한 셔틀콕이 네트 위로 날아가고, 오른쪽에서 파란 머리띠를 한 CPU 캥거루가 받으러 다가오는 장면](docs/screenshot.png)
+![빨간 머리띠를 한 쥐가 서브한 셔틀콕이 네트 위로 날아가고, 오른쪽에서 파란 머리띠를 한 CPU 캥거루가 받으러 다가오는 장면](docs/screenshot.png)
+
+![고를 수 있는 12간지 캐릭터: 쥐, 소, 빨간 스카프를 맨 호랑이, 토끼, 여의주를 든 용, 뱀, 말, 양, 왕리본을 단 원숭이, 닭, 개, 진주 목걸이를 한 돼지](docs/characters.png)
 
 ## 받기
 
-아래 링크를 누르면 바로 내려받아집니다. 받은 파일이 바뀌지 않았는지는 [SHA256SUMS.txt](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/SHA256SUMS.txt)로 확인할 수 있고, 지난 버전은 [Releases](https://github.com/YunGyeongee/corner-badminton-pixel/releases)에 있습니다.
+아래 링크를 누르면 바로 내려받아집니다. 받은 파일이 바뀌지 않았는지는 [SHA256SUMS.txt](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.5/SHA256SUMS.txt)로 확인할 수 있고, 지난 버전은 [Releases](https://github.com/YunGyeongee/corner-badminton-pixel/releases)에 있습니다.
 
 | 컴퓨터 | 내려받기 |
 | --- | --- |
-| Mac (Apple Silicon) | [corner-badminton-1.0.4-mac-arm64.dmg](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-mac-arm64.dmg) |
-| Windows 설치 파일 (x64, ARM 공통) | [corner-badminton-1.0.4-windows-setup.exe](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-setup.exe) |
-| Windows 압축 파일 (일반 PC) | [corner-badminton-1.0.4-windows-x64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-x64.zip) |
-| Windows 압축 파일 (ARM PC) | [corner-badminton-1.0.4-windows-arm64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-arm64.zip) |
+| Mac (Apple Silicon) | [corner-badminton-1.0.5-mac-arm64.dmg](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.5/corner-badminton-1.0.5-mac-arm64.dmg) |
+| Windows 설치 파일 (x64, ARM 공통) | [corner-badminton-1.0.5-windows-setup.exe](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.5/corner-badminton-1.0.5-windows-setup.exe) |
+| Windows 압축 파일 (일반 PC) | [corner-badminton-1.0.5-windows-x64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.5/corner-badminton-1.0.5-windows-x64.zip) |
+| Windows 압축 파일 (ARM PC) | [corner-badminton-1.0.5-windows-arm64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.5/corner-badminton-1.0.5-windows-arm64.zip) |
 
 ### macOS
 
-Apple Silicon(M1 이상) Mac에서 실행됩니다. [corner-badminton-1.0.4-mac-arm64.dmg](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-mac-arm64.dmg)를 받습니다.
+Apple Silicon(M1 이상) Mac에서 실행됩니다. [corner-badminton-1.0.5-mac-arm64.dmg](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.5/corner-badminton-1.0.5-mac-arm64.dmg)를 받습니다.
 
 1. `.dmg`를 열고 Corner Badminton을 응용 프로그램 폴더로 끌어다 놓습니다.
 2. 앱을 실행합니다. 아직 Apple 공증을 받지 않은 앱이라 처음에는 "확인되지 않은 개발자" 경고가 뜨고 열리지 않습니다.
 3. **시스템 설정 → 개인정보 보호 및 보안**으로 가서 아래쪽의 **그래도 열기**를 누릅니다. 한 번만 하면 됩니다.
-4. 화면 오른쪽 아래에 게임 창이 뜹니다. 바로 Space를 눌러 서브하면 됩니다.
+4. 화면 오른쪽 아래에 게임 창이 뜨고, 먼저 캐릭터를 고르는 화면이 나옵니다. A/D/W/S나 마우스로 고르고 Space를 누른 뒤, 한 번 더 Space를 눌러 서브하면 됩니다.
 5. 다른 창 위에 띄워두기 싫으면 위쪽의 `PIN` 버튼을 눌러 끕니다.
-6. 일하는 중이라 티 나지 않게 하려면 O 키나 위쪽의 `100%` 버튼으로 창을 흐리게 합니다. 누를 때마다 100% → 60% → 30%로 바뀝니다. B 키나 `BG` 버튼으로 배경을 끄면 코트, 네트, 캥거루만 바탕화면 위에 남습니다. 둘 다 다음에 켤 때도 그대로입니다.
+6. 일하는 중이라 티 나지 않게 하려면 O 키나 위쪽의 `100%` 버튼으로 창을 흐리게 합니다. 누를 때마다 100% → 60% → 30%로 바뀝니다. B 키나 `BG` 버튼으로 배경을 끄면 코트, 네트, 캐릭터만 바탕화면 위에 남습니다. 둘 다 다음에 켤 때도 그대로입니다.
 7. 끌 때는 위쪽의 `X` 버튼을 누르거나 Esc 메뉴에서 `QUIT`을 고릅니다.
 
 3번이 안 되면 터미널에서 아래 명령을 한 번 실행해도 됩니다.
@@ -36,17 +38,17 @@ xattr -dr com.apple.quarantine "/Applications/Corner Badminton.app"
 
 ### Windows
 
-Windows 10 이상에서 실행됩니다. [corner-badminton-1.0.4-windows-setup.exe](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-setup.exe)를 받습니다. 설치 파일 하나로 일반 PC(x64)와 ARM PC를 모두 지원하고, 알아서 맞는 버전을 설치합니다.
+Windows 10 이상에서 실행됩니다. [corner-badminton-1.0.5-windows-setup.exe](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.5/corner-badminton-1.0.5-windows-setup.exe)를 받습니다. 설치 파일 하나로 일반 PC(x64)와 ARM PC를 모두 지원하고, 알아서 맞는 버전을 설치합니다.
 
 1. 받은 설치 파일을 실행합니다.
 2. 아직 코드 서명을 하지 않은 앱이라 "Windows의 PC 보호" 창이 뜹니다. **추가 정보**를 누른 뒤 **실행**을 누릅니다.
 3. 관리자 권한 없이 내 계정에만 설치되고, 끝나면 바로 게임이 실행됩니다. 바탕화면과 시작 메뉴에 바로가기가 생깁니다.
-4. 화면 오른쪽 아래에 게임 창이 뜹니다. 바로 Space를 눌러 서브하면 됩니다.
+4. 화면 오른쪽 아래에 게임 창이 뜨고, 먼저 캐릭터를 고르는 화면이 나옵니다. A/D/W/S나 마우스로 고르고 Space를 누른 뒤, 한 번 더 Space를 눌러 서브하면 됩니다.
 5. 다른 창 위에 띄워두기 싫으면 위쪽의 `PIN` 버튼을 눌러 끕니다.
-6. 일하는 중이라 티 나지 않게 하려면 O 키나 위쪽의 `100%` 버튼으로 창을 흐리게 합니다. 누를 때마다 100% → 60% → 30%로 바뀝니다. B 키나 `BG` 버튼으로 배경을 끄면 코트, 네트, 캥거루만 바탕화면 위에 남습니다. 둘 다 다음에 켤 때도 그대로입니다.
+6. 일하는 중이라 티 나지 않게 하려면 O 키나 위쪽의 `100%` 버튼으로 창을 흐리게 합니다. 누를 때마다 100% → 60% → 30%로 바뀝니다. B 키나 `BG` 버튼으로 배경을 끄면 코트, 네트, 캐릭터만 바탕화면 위에 남습니다. 둘 다 다음에 켤 때도 그대로입니다.
 7. 지울 때는 **설정 → 앱 → 설치된 앱**에서 Corner Badminton을 제거합니다.
 
-설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 [corner-badminton-1.0.4-windows-x64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-x64.zip), ARM PC는 [corner-badminton-1.0.4-windows-arm64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.4/corner-badminton-1.0.4-windows-arm64.zip)입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
+설치하기 싫으면 `.zip`을 받아도 됩니다. 일반 PC는 [corner-badminton-1.0.5-windows-x64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.5/corner-badminton-1.0.5-windows-x64.zip), ARM PC는 [corner-badminton-1.0.5-windows-arm64.zip](https://github.com/YunGyeongee/corner-badminton-pixel/releases/download/v1.0.5/corner-badminton-1.0.5-windows-arm64.zip)입니다. 압축을 풀고 `Corner Badminton.exe`를 실행하면 됩니다.
 
 ### 업데이트
 
@@ -63,13 +65,17 @@ Windows 10 이상에서 실행됩니다. [corner-badminton-1.0.4-windows-setup.e
 | A / D | 좌우로 움직입니다 |
 | W | 점프합니다 |
 | Space | 라켓을 휘두릅니다. 서브도 Space입니다 |
-| Esc | 잠깐 멈추고 메뉴를 엽니다 |
+| Esc | 잠깐 멈추고 메뉴를 엽니다. 메뉴에서 캐릭터와 난이도를 바꿉니다 |
 | O | 창을 흐리게 합니다. 누를 때마다 100% → 60% → 30% |
-| B | 배경(벽과 조명)을 끄고 코트, 네트, 캥거루만 남깁니다 |
+| B | 배경(벽과 조명)을 끄고 코트, 네트, 캐릭터만 남깁니다 |
 
 방향키(← → ↑)로도 움직일 수 있습니다. 창은 맨 위 검은 막대를 잡고 끌어서 옮깁니다.
 
 ## 규칙
+
+### 캐릭터를 고를 수 있습니다
+
+12간지 동물(쥐, 소, 호랑이, 토끼, 용, 뱀, 말, 양, 원숭이, 닭, 개, 돼지) 중에 고릅니다. 게임을 켜면 캐릭터 고르는 화면이 먼저 나옵니다. A/D/W/S(방향키)나 마우스로 고르고 Space나 클릭으로 정합니다. 처음에는 쥐가 골라져 있고, 그다음부터는 지난번에 고른 캐릭터에서 시작합니다. 게임 중에 바꾸려면 Esc 메뉴의 `CHARACTER`에서 Space를 눌러 같은 화면을 열거나, A/D로 앞뒤로 넘깁니다. CPU는 늘 캥거루입니다.
 
 ### 코트 안에 떨어지면 그쪽이 실점합니다
 
@@ -105,6 +111,13 @@ CPU는 셔틀콕이 떨어질 곳을 계산해서 따라가지만, 가끔 낙하
 
 <details>
 <summary>버전 기록</summary>
+
+### 1.0.5
+
+- 캐릭터를 고를 수 있습니다. 12간지 동물(쥐, 소, 호랑이, 토끼, 용, 뱀, 말, 양, 원숭이, 닭, 개, 돼지) 중에 고르고, CPU는 그대로 캥거루입니다.
+- 게임을 켜면 캐릭터 고르는 화면이 먼저 나옵니다. A/D/W/S나 마우스로 고르고 Space나 클릭으로 정합니다. 게임 중에는 Esc 메뉴의 `CHARACTER`에서 다시 고를 수 있습니다.
+- 고른 캐릭터는 다음에 켤 때도 그대로입니다.
+- 몇몇 동물은 소품을 하나씩 챙겼습니다. 호랑이는 빨간 스카프, 용은 여의주, 원숭이는 왕리본, 돼지는 반짝이는 진주 목걸이입니다.
 
 ### 1.0.4
 

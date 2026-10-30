@@ -2,7 +2,7 @@ import { WORLD_HEIGHT, WORLD_WIDTH } from '../entities/Court';
 import type { Vec } from '../game/types';
 import { drawCenteredText, drawText, PALETTE } from '../rendering/PixelAssets';
 
-export type MenuAction = 'resume' | 'restart' | 'level' | 'background' | 'opacity' | 'pin' | 'quit';
+export type MenuAction = 'resume' | 'restart' | 'character' | 'level' | 'background' | 'opacity' | 'pin' | 'quit';
 
 export interface MenuItem {
   action: MenuAction;

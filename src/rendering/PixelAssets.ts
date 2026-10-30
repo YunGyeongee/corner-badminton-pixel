@@ -20,16 +20,12 @@ export const PALETTE = {
   peach: '#ffccaa',
 } as const;
 
-/** Colors of the kangaroo character sprite. */
-export const KANGAROO_COLORS = {
-  outline: '#1a0d05',
-  fur: '#f08a24',
-  belly: '#ffe2a8',
-  eye: '#ffffff',
-  tailTip: '#b85a10',
-  nose: '#5a2410',
-  racketFace: '#d8e4ff',
-  racketHandle: '#a0602a',
+const OUTLINE = '#1a0d05';
+const EYE = '#ffffff';
+
+export const RACKET_COLORS = {
+  face: '#d8e4ff',
+  handle: '#a0602a',
 } as const;
 
 /** Headband and racket frame color per side; the HUD uses the same colors. */
@@ -38,48 +34,451 @@ export const TEAM_COLORS: Record<'left' | 'right', string> = {
   right: '#38a0ff',
 };
 
-// Kangaroo sprite, 24x24, facing right; the renderer mirrors it for the right-hand player.
-// Legend: k outline, o fur, c belly, w eye, t tail tip, n nose, r headband (team color), . transparent.
-// The racket is drawn separately so it can swing around the paw (HAND_OFFSET in Racket.ts).
-const KANGAROO_IDLE = [
-  '........................',
-  '...kk...kk..............',
-  '..kook.kook.............',
-  '..kock.kock.............',
-  '..kock.kock.............',
-  '..kookkkookk............',
-  '.krrrrrrrrrrk...........',
-  '.koooooowwoook..........',
-  '.koooooowkooookk........',
-  '.koooooooooooooonk......',
-  '..koooooooccccckk.......',
-  '...kkooooccckkk.........',
-  '...kooooccccckkkkk......',
-  '..kooooccccccoooook.....',
-  '..koooocccccckkkkkk.....',
-  '..koooocccccck..........',
-  '.kooooocccccck..........',
-  '.kooooocccccck..........',
-  '.koooooocccck...........',
-  '.koooooooooook..........',
-  'kkooooooooooook.........',
-  'kttkooookoooook.........',
-  '.kkkoookkooooookkk......',
-  '....kook.koooooooook....',
-];
+/** Colors behind a character's sprite codes; a character only lists the ones it uses. */
+export interface CharacterColors {
+  fur: string;
+  belly?: string;
+  accent?: string;
+  nose?: string;
+  detail?: string;
+  shade?: string;
+}
+
+interface CharacterArt {
+  colors: CharacterColors;
+  idle: SpriteFrame;
+  /** Rows replaced while jumping, given as { rowIndex: row }. By default the feet just lift a pixel. */
+  tucked?: Record<number, string>;
+  /** Pixels, as [col, row], where a little star twinkles now and then. */
+  sparkles?: readonly SparklePoint[];
+}
+
+export type SparklePoint = readonly [col: number, row: number];
+
+// Character sprites, 24x24, facing right; the renderer mirrors them for the right-hand player.
+// Legend: k outline, w eye (the pixel right of an eye's lower half is its pupil), r headband (team color),
+// o fur, c belly, t accent, n nose, p detail, h shade, . transparent.
+// Every character has its paw around column 17-18, rows 12-14: the racket is drawn separately so it can
+// swing around that paw (HAND_OFFSET in Racket.ts). The cheer and sad faces are made from the eyes.
+const ART = {
+  kangaroo: {
+    colors: { fur: '#f08a24', belly: '#ffe2a8', accent: '#b85a10', nose: '#5a2410' },
+    idle: [
+      '........................',
+      '...kk...kk..............',
+      '..kook.kook.............',
+      '..kock.kock.............',
+      '..kock.kock.............',
+      '..kookkkookk............',
+      '.krrrrrrrrrrk...........',
+      '.koooooowwoook..........',
+      '.koooooowkooookk........',
+      '.koooooooooooooonk......',
+      '..koooooooccccckk.......',
+      '...kkooooccckkk.........',
+      '...kooooccccckkkkk......',
+      '..kooooccccccoooook.....',
+      '..koooocccccckkkkkk.....',
+      '..koooocccccck..........',
+      '.kooooocccccck..........',
+      '.kooooocccccck..........',
+      '.koooooocccck...........',
+      '.koooooooooook..........',
+      'kkooooooooooook.........',
+      'kttkooookoooook.........',
+      '.kkkoookkooooookkk......',
+      '....kook.koooooooook....',
+    ],
+    tucked: {
+      21: 'kttkoooooooooook........',
+      22: '.kkkkoooooooookk........',
+      23: '.....kkkkkkkkk..........',
+    },
+  },
+  rat: {
+    colors: { fur: '#8f8fa3', belly: '#d9d9e6', accent: '#ffaacc', nose: '#ff77a8', detail: '#ffaacc' },
+    idle: [
+      '........................',
+      '..kkk..kkk..............',
+      '.kpppkkpppk.............',
+      '.kpppkkpppk.............',
+      '.kpppkkpppk.............',
+      '..kkoooookkk............',
+      '.krrrrrrrrrrk...........',
+      '.koooooowwoook..........',
+      '.koooooowkoooookk.......',
+      '.kooooooooooooooonk.....',
+      '..koooooooocccckkk......',
+      '...kkooooccckkk.........',
+      '...kooooccccckkkkk......',
+      '..kooooccccccoooook.....',
+      '..koooocccccckkkkkk.....',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      'tt.kooooocccck..........',
+      't..koooooooook..........',
+      't..kooookoooook.........',
+      '.t.koook.kooook.........',
+      '..kooook.koooook........',
+      '..kkkkkk.kkkkkkk........',
+    ],
+  },
+  ox: {
+    colors: { fur: '#b8682a', belly: '#f2d3a0', accent: '#fff1e8', nose: '#5a2410', shade: '#3a1a08' },
+    idle: [
+      '........................',
+      '.kk.......kk............',
+      'ktk.......ktk...........',
+      'ktkk.....kktk...........',
+      '.kttkkkkkttk............',
+      'kookooooooookok.........',
+      '.krrrrrrrrrrk...........',
+      '..koooooowwook..........',
+      '..koooooowkocckk........',
+      '..kooooooocccccck.......',
+      '..koooooocccnccnk.......',
+      '...kkooooccccckk........',
+      '...kooooccccckkkkk......',
+      '..kooooccccccoooook.....',
+      '..koooocccccckkkkkk.....',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      'k.kooooocccck...........',
+      'tkkoooooooook...........',
+      'tk.kooookoooook.........',
+      '...koook.kooook.........',
+      '..khhhhk.khhhhhk........',
+      '..kkkkkk.kkkkkkk........',
+    ],
+  },
+  tiger: {
+    colors: { fur: '#ffa300', belly: '#fff1e8', accent: '#1a0d05', nose: '#ff77a8', detail: '#e8283c', shade: '#9a1028' },
+    idle: [
+      '........................',
+      '..kk.....kk.............',
+      '.kcok...kock............',
+      '.ktok...ktok............',
+      '..kokkkkkok.............',
+      '.kotototoook............',
+      '.krrrrrrrrrrk...........',
+      '.kttoooowwook...........',
+      '.kootooowkoookk.........',
+      '.kttooooooccccnk........',
+      '..kotooocccccckk........',
+      '..hpppppppppkk..........',
+      '.hhkothpppphkkkkk.......',
+      '.hkttoochpphcototok.....',
+      '..kootocchhccktktkk.....',
+      '..koooocccccck..........',
+      '..kttoocccccck..........',
+      '.t.kotocccccck..........',
+      'to.koooocccck...........',
+      'kt.kttoootook...........',
+      '.kkkootokootook.........',
+      '...koook.ktoook.........',
+      '..kooook.koooook........',
+      '..kkkkkk.kkkkkkk........',
+    ],
+  },
+  rabbit: {
+    colors: { fur: '#f4ece6', belly: '#ffffff', nose: '#ff77a8', detail: '#ffaacc' },
+    idle: [
+      '..kk..kk................',
+      '.kpok.kpok..............',
+      '.kpok.kpok..............',
+      '.kpok.kpok..............',
+      '.kpok.kpok..............',
+      '..kookkookk.............',
+      '.krrrrrrrrrrk...........',
+      '.koooooowwook...........',
+      '.koooooowkoookk.........',
+      '.kpooooooooooonk........',
+      '..kooooooocccckk........',
+      '...kkooooccckk..........',
+      '...kooooccccckkkkk......',
+      '..kooooccccccoooook.....',
+      '..koooocccccckkkkkk.....',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      '.kkkooooocccck..........',
+      'kcckoooooooook..........',
+      'kcckooookoooook.........',
+      '.kkkoook.kooook.........',
+      '..kooook.koooook........',
+      '..kkkkkk.kkkkkkk........',
+    ],
+  },
+  dragon: {
+    colors: { fur: '#3cb04a', belly: '#ffe27a', accent: '#ffd040', nose: '#1a5a20', detail: '#ff4060', shade: '#1f7a2e' },
+    idle: [
+      '.kk.....kk..............',
+      '.ktk...ktk..............',
+      '..ktk.ktk...............',
+      '..kktkktkk..............',
+      '.kkoooooookk............',
+      'khkoooooooookk..........',
+      '.krrrrrrrrrrkk..........',
+      '.koooooowwooook.........',
+      '.koooooowkoooookk.......',
+      '.koooooooooooooonk......',
+      '.kkkkooooocccckkk.......',
+      'kcppkooooccckkk.........',
+      'kpppkoooccccckkkkk......',
+      'kpppkooccccccoooook.....',
+      'kooooooccccccktktkk.....',
+      '.kkkooocccccck..........',
+      '.khoooocccccck..........',
+      'kook.oooccccck..........',
+      'koook.oocccck...........',
+      '.kooookoooook...........',
+      '..kkooookoooook.........',
+      '...koook.kooook.........',
+      '..kooook.koooook........',
+      '..kkkkkk.kkkkkkk........',
+    ],
+  },
+  snake: {
+    colors: { fur: '#8fce3c', belly: '#f6e58d', accent: '#4f8a1e', detail: '#ff3838' },
+    idle: [
+      '........................',
+      '........................',
+      '........................',
+      '...kkkkkkk..............',
+      '..kooooooookk...........',
+      '.koootoooooook..........',
+      '.krrrrrrrrrrrk..........',
+      '.koooooowwoooook........',
+      '.koooooowkooooook.......',
+      '..kooooooooooooook......',
+      '...kkooocccckkkkkpp.....',
+      '.....koocck.....p.......',
+      '.....kooocck..kkkk......',
+      '......kooocckkooook.....',
+      '.......koooccckkkk......',
+      '........kooocck.........',
+      '........kooocck.........',
+      '...kkkkkoooocck.........',
+      '..kootoooooocck.........',
+      '.kotoootooooook.........',
+      '.kocccccccccook.........',
+      'kotoootooootooook.......',
+      'kooccccccccccccook......',
+      '.kkkkkkkkkkkkkkkk.......',
+    ],
+  },
+  horse: {
+    colors: { fur: '#9a5a30', belly: '#e0b080', accent: '#3a2010', nose: '#3a2010', shade: '#3a2010' },
+    idle: [
+      '...kk.kk................',
+      '..kok.kok...............',
+      '..kokkkok...............',
+      '.ktkoooookk.............',
+      '.kttoooooook............',
+      '.ktttooooooook..........',
+      '.krrrrrrrrrrrk..........',
+      'ktttooooowwoook.........',
+      'ktttooooowkooookk.......',
+      'kttkoooooooooooccck.....',
+      'ktk.kooooooooocccnck....',
+      'kk...kkoooockkkkkkk.....',
+      '...kooooccccckkkkk......',
+      '..kooooccccccoooook.....',
+      '..koooocccccckkkkkk.....',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      'kk.kooooocccck..........',
+      'ttkkoooooooook..........',
+      'tt.kooookoooook.........',
+      'kt.koook.kooook.........',
+      '.k.khhhk.khhhhk.........',
+      '...kkkkk.kkkkkk.........',
+    ],
+  },
+  sheep: {
+    colors: { fur: '#fff1e8', nose: '#ffaacc', shade: '#5f574f' },
+    idle: [
+      '........................',
+      '...kk.kk.kk.............',
+      '..koookoookk............',
+      '.koooooooooook..........',
+      'koooooooooooook.........',
+      'kooooooookkkkk..........',
+      '.krrrrrrrrrrrk..........',
+      'kkoooookhwwhhk..........',
+      'koooooookhwkhhhkk.......',
+      'kooooooookhhhhhhhnk.....',
+      '.kooooooookhhhhhkk......',
+      '..kooooooookkkkk........',
+      '..kooooooooookkkkk......',
+      '.koooooooooookhhhhk.....',
+      '.kooooooooooookkkkk.....',
+      'koooooooooooook.........',
+      'koooooooooooook.........',
+      'koooooooooooook.........',
+      '.koooooooooook..........',
+      '..kkoooooooook..........',
+      '...khhk.khhk............',
+      '...khhk.khhk............',
+      '..khhhk.khhhk...........',
+      '..kkkkk.kkkkk...........',
+    ],
+  },
+  monkey: {
+    // A big pink bow sits on top of the head.
+    colors: { fur: '#8a5a3a', belly: '#f0c8a0', accent: '#ff77a8', nose: '#5a2410', detail: '#f0c8a0', shade: '#b03060' },
+    idle: [
+      'kkkk.......kkkk.........',
+      'ktttkkkkkkktttk.........',
+      'kttttkhthkttttk.........',
+      'kttttkhthkttttk.........',
+      'ktttkkkkkkktttk.........',
+      'kkkkoccooccokkk.........',
+      '.krrrrrrrrrrrk..........',
+      '.kooccccwwccok..........',
+      '..koccccwkccckk.........',
+      '..kocccccccccccnk.......',
+      '..kooccccccccckk........',
+      '...kkoocccckkk..........',
+      '...kooooccccckkkkk......',
+      '..kooooccccccoooook.....',
+      '..koooocccccckkkkkk.....',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      '.kkkooooocccck..........',
+      'k..kooooooooook.........',
+      'k..kooookoooook.........',
+      'kk.koook.kooook.........',
+      '.kkooook.koooook........',
+      '..kkkkkk.kkkkkkk........',
+    ],
+  },
+  rooster: {
+    colors: { fur: '#fff1e8', accent: '#ffa300', detail: '#ff3838', shade: '#d8ccc0' },
+    idle: [
+      '.....k.k................',
+      '....kpkpk...............',
+      '...kpppppk..............',
+      '...kkppppk..............',
+      '..kooooooook............',
+      '..koooooooook...........',
+      '.krrrrrrrrrrk...........',
+      '.koooooowwook...........',
+      '.koooooowkoookkk........',
+      '.kooooooooooktttk.......',
+      '..koooooooooktkk........',
+      '...kkooooooopk..........',
+      '.k.koooooooopkkkk.......',
+      'khkoooooooohhhhook......',
+      'khhkooooohhhhkkkkk......',
+      'khhkooooooohhk..........',
+      '.khkoooooooook..........',
+      '.khoooooooooook.........',
+      '..kooooooooook..........',
+      '...kkooooookk...........',
+      '......kt.kt.............',
+      '......kt.kt.............',
+      '.....kttkttk............',
+      '.....kkkkkkk............',
+    ],
+  },
+  dog: {
+    colors: { fur: '#e8b870', belly: '#fff1e8', accent: '#a06a30', nose: '#1a0d05' },
+    idle: [
+      '........................',
+      '..kk....kk..............',
+      '.ktok..ktok.............',
+      '.ktok..ktok.............',
+      '.kook..kook.............',
+      '..kkoookkkk.............',
+      '.krrrrrrrrrrk...........',
+      '.koooooowwook...........',
+      '.koooooowkoookk.........',
+      '.kooooooocccccnk........',
+      '..koooooocccccck........',
+      '...kkooooccckkk.........',
+      '...kooooccccckkkkk......',
+      '..kooooccccccoooook.....',
+      '..koooocccccckkkkkk.....',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      '..koooocccccck..........',
+      'k..kooooocccck..........',
+      'tk.koooooooook..........',
+      'ktkkooookoooook.........',
+      '.kkkoook.kooook.........',
+      '..kooook.koooook........',
+      '..kkkkkk.kkkkkkk........',
+    ],
+  },
+  pig: {
+    sparkles: [[3, 11], [6, 13], [9, 13]],
+    colors: { fur: '#ffaac0', belly: '#ffd0dc', accent: '#ff77a8', nose: '#b03060', detail: '#ffffff', shade: '#b03060' },
+    idle: [
+      '........................',
+      '........................',
+      '..kk....kk..............',
+      '.ktk...ktk..............',
+      '.kook.kook..............',
+      '.kkoookookk.............',
+      '.krrrrrrrrrrk...........',
+      '.koooooowwook...........',
+      '.koooooowkookkkk........',
+      '.koooooooooktttk........',
+      '.kooooooooooktntk.......',
+      '..kppooocccktttk........',
+      '..kpphppcccckkkkkk......',
+      '.koooopphppcoooook......',
+      '.koooocccpphkkkkkk......',
+      '.koooocccccck...........',
+      '.koooocccccck...........',
+      '.koooocccccck...........',
+      'kkoooocccccck...........',
+      'tk.koooooooook..........',
+      'kt.kooookoooook.........',
+      '...koook.kooook.........',
+      '..khhhhk.khhhhhk........',
+      '..kkkkkk.kkkkkkk........',
+    ],
+  },
+} satisfies Record<string, CharacterArt>;
+
+export type CharacterId = keyof typeof ART;
+
+/** The CPU always plays the kangaroo. */
+export const CPU_CHARACTER: CharacterId = 'kangaroo';
+
+/** Characters the player can choose: the twelve zodiac animals in order. */
+export const CHARACTER_IDS: CharacterId[] = (Object.keys(ART) as CharacterId[]).filter((id) => id !== CPU_CHARACTER);
 
 /** Copy of `frame` with some rows replaced, given as { rowIndex: row }. */
 function withRows(frame: readonly string[], rows: Record<number, string>): string[] {
   return frame.map((row, index) => rows[index] ?? row);
 }
 
-const LEGS_TUCKED = {
-  21: 'kttkoooooooooook........',
-  22: '.kkkkoooooooookk........',
-  23: '.....kkkkkkkkk..........',
-};
-const EYES_CLOSED = { 7: '.koooooooooook..........', 8: '.kooooookkooookk........' };
-const EYES_DOWNCAST = { 7: '.kooooookkoook..........' };
+/** The feet move up a row, as if the legs were pulled in. */
+function liftFeet(frame: readonly string[]): Record<number, string> {
+  return { [SPRITE_HEIGHT - 2]: frame[SPRITE_HEIGHT - 1], [SPRITE_HEIGHT - 1]: '.'.repeat(SPRITE_WIDTH) };
+}
+
+/** Eyes shut into a happy line: the upper half takes the color beside it, the lower half turns dark. */
+function closeEyes(frame: readonly string[]): string[] {
+  const top = frame.findIndex((row) => row.includes('w'));
+  return withRows(frame, {
+    [top]: frame[top].replace(/w+/g, (eye, at: number) => frame[top][at - 1].repeat(eye.length)),
+    [top + 1]: frame[top + 1].replaceAll('w', 'k'),
+  });
+}
+
+/** Heavy lids over the upper half of the eyes. */
+function lowerEyes(frame: readonly string[]): string[] {
+  const top = frame.findIndex((row) => row.includes('w'));
+  return withRows(frame, { [top]: frame[top].replaceAll('w', 'k') });
+}
 
 export const SPRITE_WIDTH = 24;
 export const SPRITE_HEIGHT = 24;
@@ -87,30 +486,100 @@ export const SPRITE_HEIGHT = 24;
 export const SPRITE_ANCHOR_X = 9;
 
 export type SpriteFrame = readonly string[];
+export type Pose = 'idle' | 'jump' | 'cheer' | 'sad';
 
-export const SPRITES = {
-  idle: KANGAROO_IDLE,
-  jump: withRows(KANGAROO_IDLE, LEGS_TUCKED),
-  cheer: withRows(KANGAROO_IDLE, { ...EYES_CLOSED, ...LEGS_TUCKED }),
-  sad: withRows(KANGAROO_IDLE, EYES_DOWNCAST),
-} satisfies Record<string, SpriteFrame>;
+export interface Character {
+  colors: CharacterColors;
+  sprites: Record<Pose, SpriteFrame>;
+  sparkles: readonly SparklePoint[];
+}
 
-export function spriteColor(code: string, teamColor: string): string | null {
+function toCharacter(art: CharacterArt): Character {
+  const jump = withRows(art.idle, art.tucked ?? liftFeet(art.idle));
+  return {
+    colors: art.colors,
+    sprites: { idle: art.idle, jump, cheer: closeEyes(jump), sad: lowerEyes(art.idle) },
+    sparkles: art.sparkles ?? [],
+  };
+}
+
+export const CHARACTERS = {} as Record<CharacterId, Character>;
+for (const id of Object.keys(ART) as CharacterId[]) CHARACTERS[id] = toCharacter(ART[id]);
+
+/** Draws a sprite with its anchor column at `anchorX`; facing -1 mirrors it. */
+export function drawSprite(
+  ctx: CanvasRenderingContext2D,
+  frame: SpriteFrame,
+  anchorX: number,
+  top: number,
+  facing: 1 | -1,
+  teamColor: string,
+  colors: CharacterColors,
+): void {
+  for (let row = 0; row < SPRITE_HEIGHT; row++) {
+    for (let col = 0; col < SPRITE_WIDTH; col++) {
+      const color = spriteColor(frame[row][col], teamColor, colors);
+      if (!color) continue;
+      ctx.fillStyle = color;
+      ctx.fillRect(anchorX + facing * (col - SPRITE_ANCHOR_X), top + row, 1, 1);
+    }
+  }
+}
+
+const SPARKLE_PERIOD = 1.6;
+/** Twinkles are spread over the period so they don't all flash at once. */
+const SPARKLE_STAGGER = 0.37;
+
+/**
+ * A character's twinkles at `time` seconds: each one grows from a dot into a 4-point star and back,
+ * then stays off for the rest of its cycle. Positions follow drawSprite.
+ */
+export function drawSparkles(
+  ctx: CanvasRenderingContext2D,
+  sparkles: readonly SparklePoint[],
+  anchorX: number,
+  top: number,
+  facing: 1 | -1,
+  time: number,
+): void {
+  sparkles.forEach(([col, row], index) => {
+    const phase = (time / SPARKLE_PERIOD + index * SPARKLE_STAGGER) % 1;
+    const size = phase < 0.08 ? 1 : phase < 0.16 ? 2 : phase < 0.26 ? 3 : phase < 0.34 ? 2 : phase < 0.42 ? 1 : 0;
+    if (size === 0) return;
+    const x = anchorX + facing * (col - SPRITE_ANCHOR_X);
+    const y = top + row;
+    ctx.fillStyle = EYE;
+    ctx.fillRect(x, y, 1, 1);
+    for (let arm = 1; arm < size; arm++) {
+      ctx.fillStyle = arm === 1 ? EYE : PALETTE.yellow;
+      ctx.fillRect(x - arm, y, 1, 1);
+      ctx.fillRect(x + arm, y, 1, 1);
+      ctx.fillRect(x, y - arm, 1, 1);
+      ctx.fillRect(x, y + arm, 1, 1);
+    }
+  });
+}
+
+export function spriteColor(code: string, teamColor: string, colors: CharacterColors): string | null {
   switch (code) {
     case 'k':
-      return KANGAROO_COLORS.outline;
-    case 'o':
-      return KANGAROO_COLORS.fur;
-    case 'c':
-      return KANGAROO_COLORS.belly;
+      return OUTLINE;
     case 'w':
-      return KANGAROO_COLORS.eye;
-    case 't':
-      return KANGAROO_COLORS.tailTip;
-    case 'n':
-      return KANGAROO_COLORS.nose;
+      return EYE;
     case 'r':
       return teamColor;
+    case 'o':
+      return colors.fur;
+    case 'c':
+      return colors.belly ?? null;
+    case 't':
+      return colors.accent ?? null;
+    case 'n':
+      return colors.nose ?? null;
+    case 'p':
+      return colors.detail ?? null;
+    case 'h':
+      return colors.shade ?? null;
     default:
       return null;
   }

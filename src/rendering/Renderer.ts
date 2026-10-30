@@ -10,18 +10,19 @@ import {
 } from '../entities/Racket';
 import type { Shuttlecock } from '../entities/Shuttlecock';
 import type { Game, GameEvent } from '../game/Game';
-import type { Vec } from '../game/types';
+import type { Side, Vec } from '../game/types';
 import { Effects } from './Effects';
 import {
+  CHARACTERS,
   drawPixelLine,
-  KANGAROO_COLORS,
+  drawSparkles,
+  drawSprite,
   PALETTE,
-  SPRITE_ANCHOR_X,
+  RACKET_COLORS,
   SPRITE_HEIGHT,
-  SPRITE_WIDTH,
-  SPRITES,
-  spriteColor,
   TEAM_COLORS,
+  type Character,
+  type CharacterId,
   type SpriteFrame,
 } from './PixelAssets';
 
@@ -47,10 +48,13 @@ export class Renderer {
   private readonly structures: HTMLCanvasElement;
   /** Off: only the court, the net and the players are drawn, and the rest of the window stays see-through. */
   showBackground = true;
+  characters: Record<Side, CharacterId> = { left: 'rat', right: 'kangaroo' };
   private scale = 1;
   private offsetX = 0;
   private offsetY = 0;
   private dpr = 0;
+  /** Seconds of play so far; drives the sparkles and stands still while paused. */
+  private time = 0;
 
   constructor(private readonly canvas: HTMLCanvasElement) {
     this.ctx = get2d(canvas);
@@ -95,6 +99,7 @@ export class Renderer {
     // Moving the window to a display with a different pixel ratio needs a new backing size.
     if ((window.devicePixelRatio || 1) !== this.dpr) this.resize();
     this.effects.update(dt);
+    this.time += dt;
 
     const ctx = this.bufferCtx;
     const shake = this.effects.shakeOffset;
@@ -104,8 +109,8 @@ export class Renderer {
     if (this.showBackground) ctx.drawImage(this.backdrop, 0, 0);
     ctx.drawImage(this.structures, 0, 0);
     drawShadows(ctx, game);
-    drawPlayer(ctx, game.players.left);
-    drawPlayer(ctx, game.players.right);
+    drawPlayer(ctx, game.players.left, CHARACTERS[this.characters.left], this.time);
+    drawPlayer(ctx, game.players.right, CHARACTERS[this.characters.right], this.time);
     drawShuttle(ctx, game.shuttle);
     this.effects.draw(ctx);
     ctx.restore();
@@ -196,19 +201,19 @@ function drawShadows(ctx: CanvasRenderingContext2D, game: Game): void {
   if (shuttle.state === 'flight') ctx.fillRect(Math.round(shuttle.x) - 1, GROUND_Y, 3, 1);
 }
 
-function playerFrame(player: Player): SpriteFrame {
+function playerFrame(player: Player, sprites: Character['sprites']): SpriteFrame {
   switch (player.state) {
     case 'win':
-      return SPRITES.cheer;
+      return sprites.cheer;
     case 'lose':
-      return SPRITES.sad;
+      return sprites.sad;
     case 'jump':
-      return SPRITES.jump;
+      return sprites.jump;
     case 'swing':
-      return player.grounded ? SPRITES.idle : SPRITES.jump;
+      return player.grounded ? sprites.idle : sprites.jump;
     case 'run':
     case 'idle':
-      return SPRITES.idle;
+      return sprites.idle;
   }
 }
 
@@ -217,19 +222,12 @@ function playerBob(player: Player): number {
   return player.state === 'run' && Math.floor(player.animTime / RUN_BOB_TIME) % 2 === 1 ? -1 : 0;
 }
 
-function drawPlayer(ctx: CanvasRenderingContext2D, player: Player): void {
+function drawPlayer(ctx: CanvasRenderingContext2D, player: Player, character: Character, time: number): void {
   const teamColor = TEAM_COLORS[player.side];
-  const frame = playerFrame(player);
-  const x = Math.round(player.x);
+  const frame = playerFrame(player, character.sprites);
   const top = Math.round(player.y) - SPRITE_HEIGHT + playerBob(player);
-  for (let row = 0; row < SPRITE_HEIGHT; row++) {
-    for (let col = 0; col < SPRITE_WIDTH; col++) {
-      const color = spriteColor(frame[row][col], teamColor);
-      if (!color) continue;
-      ctx.fillStyle = color;
-      ctx.fillRect(x + player.facing * (col - SPRITE_ANCHOR_X), top + row, 1, 1);
-    }
-  }
+  drawSprite(ctx, frame, Math.round(player.x), top, player.facing, teamColor, character.colors);
+  drawSparkles(ctx, character.sparkles, Math.round(player.x), top, player.facing, time);
   drawRacket(ctx, player, teamColor);
 }
 
@@ -259,7 +257,7 @@ function drawRacket(ctx: CanvasRenderingContext2D, player: Player, frameColor: s
     Math.floor(hand.y),
     Math.floor(hand.x + d.x * HANDLE_LENGTH),
     Math.floor(hand.y + d.y * HANDLE_LENGTH),
-    KANGAROO_COLORS.racketHandle,
+    RACKET_COLORS.handle,
   );
 
   // Racket head: an ellipse along the handle, team-colored frame around a pale string bed.
@@ -274,7 +272,7 @@ function drawRacket(ctx: CanvasRenderingContext2D, player: Player, frameColor: s
       const across = (dx * -d.y + dy * d.x) / RACKET_HEAD_WIDTH;
       const distance = along * along + across * across;
       if (distance > 1) continue;
-      ctx.fillStyle = distance > RACKET_FRAME_INNER ? frameColor : KANGAROO_COLORS.racketFace;
+      ctx.fillStyle = distance > RACKET_FRAME_INNER ? frameColor : RACKET_COLORS.face;
       ctx.fillRect(px, py, 1, 1);
     }
   }
